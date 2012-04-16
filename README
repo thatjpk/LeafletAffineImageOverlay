@@ -9,3 +9,4 @@ map.addLayer(), but until then, there's this joint.
 [1] http://leaflet.cloudmade.com/
 [2] http://code.google.com/p/overlay-tiler/
 
+Look at index.html and style.css for a usage example.
