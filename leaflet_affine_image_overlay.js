@@ -36,13 +36,13 @@
 * [2] http://code.google.com/p/overlay-tiler/
 *
 */
-var LeafletAffineImageOverlay = function(map, image, canvas_id) {
+var LeafletAffineImageOverlay = function(map, image, canvasId) {
     // The leaflet instance
     var map = map;
     // The image element that'll be in the overlay.
     var image = image;
     // The id the canvas element will be given.
-    var canvas_id = canvas_id;
+    var canvasId = canvasId;
     // The html canvas element.
     var canvas = null;
     // The canvas drawing context
@@ -56,7 +56,7 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
 
     // Sets up the overlay
     function init() {
-        insert_canvas();
+        insertCanvas();
         ctx = canvas.getContext('2d');
         generateMarkers();
         setupListeners();
@@ -76,7 +76,7 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
 
     // Generates the marker objects and adds them to the map
     function generateMarkers() {
-        var center = latlng_to_container_point(map.getCenter()); 
+        var center = latlngToContainerPoint(map.getCenter()); 
 
         var north = center.y
         var south = center.y + image.height;
@@ -105,16 +105,16 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
 
     // Returns a marker object at the given container location
     function createMarkerAtContainerPoint(container_point) {
-        var latlng = container_point_to_latlng(container_point);
+        var latlng = containerPointToLatlng(container_point);
         return new L.Marker(latlng, {draggable: true});
     }
 
     // Creates and inserts a canvas element with the same dimensions as the
     // map's container by appending to the map container's parent.
-    function insert_canvas() {
+    function insertCanvas() {
         canvas = document.createElement('canvas');
         var mapSize = map.getSize();
-        canvas.id = canvas_id;
+        canvas.id = canvasId;
         canvas.width = mapSize.x;
         canvas.height = mapSize.y;
         $(map._container.parentNode).append(canvas); // FIXME better way?
@@ -122,27 +122,27 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
     }
 
     // Converts a latlng on the world to a pixel coordinate in the map's div.
-    function latlng_to_container_point(latlng) {
+    function latlngToContainerPoint(latlng) {
         var pixel_on_world = map.latLngToLayerPoint(latlng);
         var pixel_in_container = map.layerPointToContainerPoint(pixel_on_world);
         return pixel_in_container;
     }
 
     // Converts a pixel coordinate in the map's div to a latlng on the world.
-    function container_point_to_latlng(container_point) {
-        var pixel_on_world = map.containerPointToLayerPoint(container_point);
-        var latlng = map.layerPointToLatLng(pixel_on_world);
+    function containerPointToLatlng(containerPoint) {
+        var pixelOnWorld = map.containerPointToLayerPoint(containerPoint);
+        var latlng = map.layerPointToLatLng(pixelOnWorld);
         return latlng;
     }
 
     // Renders the overlay to the given canvas context.
     function render() {
         ctx.save();
-        clear_canvas();
+        clearCanvas();
 
-        var marker0 = latlng_to_container_point(affineMarkers[0].getLatLng());
-        var marker1 = latlng_to_container_point(affineMarkers[1].getLatLng());
-        var marker2 = latlng_to_container_point(affineMarkers[2].getLatLng());
+        var marker0 = latlngToContainerPoint(affineMarkers[0].getLatLng());
+        var marker1 = latlngToContainerPoint(affineMarkers[1].getLatLng());
+        var marker2 = latlngToContainerPoint(affineMarkers[2].getLatLng());
 
         var m11 = (marker1.x - marker0.x) / image.width;
         var m12 = (marker1.y - marker0.y) / image.width;
@@ -164,7 +164,7 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
     }
 
     // Clear the canvas so it may be redrawn
-    function clear_canvas() {
+    function clearCanvas() {
         ctx.clearRect(0,0, canvas.width, canvas.height);
         return;
     }
@@ -174,7 +174,7 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
     // containing two-element arrays that express a coordinate pair,
     // image_location, and world_location.  The former being a pixel location
     // on the image (x,y), the later being a location on the world (lng,lat).
-    function get_gcps() {
+    function getGcpList() {
         var gcps = [];
         for (i in affineMarkers) {
             var image_loc = imageLocations[i];
@@ -192,7 +192,7 @@ var LeafletAffineImageOverlay = function(map, image, canvas_id) {
 
     init();
     return {
-        get_gcps: get_gcps,
+        getGcpList: getGcpList,
     };
 };
 
