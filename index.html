@@ -1,29 +1,30 @@
 <html>
     <head>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
         <script type="text/javascript" src="./leaflet/leaflet.js"></script>
         <link rel="stylesheet" href="./leaflet/leaflet.css" />
-        <script type="text/javascript" src="./leaflet_affine_image_overlay.js">
-        </script>
         <link rel="stylesheet" href="./style.css" />
         <script type="text/javascript">
-            $(document).ready(function() {
-                var map = init_map("map");
-                var affineOverlay;
-                var image = new Image();
+            require(['./LeafletAffineImageOverlay'], function(AffineOverlay) {
+                $(document).ready(function() {
+                    var map = init_map("map");
+                    var affineOverlay;
+                    var image = new Image();
 
-                image.onload = function() {
-                    affineOverlay = new LeafletAffineImageOverlay(
-                        map, image, 'theCanvas'
-                    );
-                };
-                image.src = "./prettywoman_small.png";
+                    image.onload = function() {
+                        affineOverlay = new AffineOverlay(
+                            map, image, 'theCanvas'
+                        );
+                    };
+                    image.src = "./prettywoman_small.png";
 
-                $("#theButton").on('click', function() {
-                    console.log(affineOverlay.getGcpList());
+                    $("#theButton").on('click', function() {
+                        console.log(affineOverlay.getGcpList());
+                    });
+                    
+                    return;
                 });
-                
-                return;
             });
 
             function init_map(map_div) {
