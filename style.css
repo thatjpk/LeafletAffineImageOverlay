@@ -1,0 +1,21 @@
+html, body {
+    border: 0px;
+    margin: 0px;
+}
+
+#map {
+    width: 1000px;
+    height: 500px;
+    border: 2px solid blue;
+    float: left;
+}
+
+#theCanvas {
+    z-index: 2;
+    position: absolute;
+    left: 0px;
+    top:0px;
+    pointer-events: none; /* FIXME probably breaks in some browsers */
+    border: 2px solid red;
+    float: left;
+}

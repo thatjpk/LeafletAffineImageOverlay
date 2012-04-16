@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="./leaflet/leaflet.js"></script>
+        <link rel="stylesheet" href="./leaflet/leaflet.css" />
+        <script type="text/javascript" src="./leaflet_affine_image_overlay.js">
+        </script>
+        <link rel="stylesheet" href="./style.css" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var map = init_map("map");
+                var affineOverlay;
+                var image = new Image();
+
+                image.onload = function() {
+                    affineOverlay = new LeafletAffineImageOverlay(
+                        map, image, 'theCanvas'
+                    );
+                };
+                image.src = "./prettywoman_small.png";
+
+                $("#renderButton").on('click', function() {
+                    console.log(affineOverlay.get_gcps());
+                });
+                
+                return;
+            });
+
+            function init_map(map_div) {
+                var map = new L.Map(map_div);
+                var tileUrl =
+                    'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg';
+                var tileAttrib = // Rule #2: Give credit where it's due.
+                    '&copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> ' +
+                    'contributors, CC-BY-SA, Tiles Courtesy of ' +
+                    '<a href="http://developer.mapquest.com/web/products/open/map">' +
+                    'MapQuest</a>';
+                var tiles = new L.TileLayer(
+                    tileUrl,
+                    {maxZoom: 17, attribution: tileAttrib}
+                );
+                map.setView(new L.LatLng(0,0), 1).addLayer(tiles);
+
+                return map;
+            }
+
+        </script>
+    </head>
+    <body>
+        <div id="container">
+            <div id="map"></div>
+        </div>
+        <button id="renderButton">
+            Print Ground Control Points to Console
+        </button>
+    </body>
+</html>
