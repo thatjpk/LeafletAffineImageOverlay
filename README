@@ -10,3 +10,5 @@ map.addLayer(), but until then, there's this joint.
 [2] http://code.google.com/p/overlay-tiler/
 
 Look at index.html and style.css for a usage example.
+
+Works in Firefox 10, and Chromium 17.  Probably breaks on some other browsers.
