@@ -1,4 +1,4 @@
-Demo: http://ec2-107-21-232-84.compute-1.amazonaws.com:8000/
+Demo: http://ec2-107-21-232-84.compute-1.amazonaws.com/static/laio/index.html
 
 A super-hacky overlay for leaflet[1] that lets you display an image on top of
 the map, transform it using three anchors, and output ground control points
