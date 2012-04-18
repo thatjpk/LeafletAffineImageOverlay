@@ -123,7 +123,6 @@ define(function(require) {
             } else {
                 icon = new L.Icon.Default();
             }
-            console.log(icon);
             return new L.Marker(latlng, {
                 draggable: true,
                 icon: icon,
