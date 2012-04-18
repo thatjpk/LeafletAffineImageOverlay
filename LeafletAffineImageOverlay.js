@@ -1,4 +1,4 @@
-/*
+/*     
 * Copyright (c) 2012, John P. Kiffmeyer
 * All rights reserved.
 * 
@@ -38,7 +38,7 @@
 */
 
 define(function(require) {
-    var LeafletAffineImageOverlay = function(map, image, canvasId) {
+    var LeafletAffineImageOverlay = function(map, image, canvasId, options) {
         // The leaflet instance
         var map = map;
         // The image element that'll be in the overlay.
@@ -55,9 +55,15 @@ define(function(require) {
         var imageLocations = null;
         // Layer containing the affine markers
         var affineMarkerLayer = null;
+        // Options hash
+        var options = options;
 
         // Sets up the overlay
         function init() {
+            if (!options) {
+                options = {};
+            }
+
             insertCanvas();
             ctx = canvas.getContext('2d');
             generateMarkers();
@@ -108,7 +114,20 @@ define(function(require) {
         // Returns a marker object at the given container location
         function createMarkerAtContainerPoint(container_point) {
             var latlng = containerPointToLatlng(container_point);
-            return new L.Marker(latlng, {draggable: true});
+
+            // Use the custom icon, or fall back on the default one if it's
+            // not defined.
+            var icon;
+            if (options.icon) {
+                icon = new options.icon();
+            } else {
+                icon = new L.Icon.Default();
+            }
+            console.log(icon);
+            return new L.Marker(latlng, {
+                draggable: true,
+                icon: icon,
+            });
         }
 
         // Creates and inserts a canvas element with the same dimensions as the
