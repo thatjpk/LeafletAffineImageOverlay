@@ -17,7 +17,7 @@
                             map, image, 'theCanvas'
                         );
                     };
-                    image.src = "./prettywoman_small.png";
+                    image.src = "./buildingLayer.png";
 
                     $("#theButton").on('click', function() {
                         console.log(affineOverlay.getGcpList());
@@ -40,7 +40,7 @@
                     tileUrl,
                     {maxZoom: 17, attribution: tileAttrib}
                 );
-                map.setView(new L.LatLng(0,0), 1).addLayer(tiles);
+                map.setView(new L.LatLng(0,0), 5).addLayer(tiles);
 
                 return map;
             }
