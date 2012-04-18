@@ -55,15 +55,19 @@ define(function(require) {
         var imageLocations = null;
         // Layer containing the affine markers
         var affineMarkerLayer = null;
-        // Options hash
-        var options = options;
+        // Options hash (with defaults).
+        var options = $.extend({
+            // The icon to use for the transformation markers.
+            icon: L.Icon.Default,
+            // Scales the bounding rectangle that the image is fitted to.  At
+            // a value of 1.0, the image will be fitted to the map's viewport.
+            // At a value of 0.5, the image will be fitted to half the map's
+            // viewport, etc.
+            boundingScale: 0.75, 
+        }, options);
 
         // Sets up the overlay
         function init() {
-            if (!options) {
-                options = {};
-            }
-
             insertCanvas();
             ctx = canvas.getContext('2d');
             generateMarkers();
@@ -84,12 +88,36 @@ define(function(require) {
 
         // Generates the marker objects and adds them to the map
         function generateMarkers() {
-            var center = latlngToContainerPoint(map.getCenter()); 
+            var mapSize = map.getSize().clone();
+            var boundedMapSize = map.getSize().clone();
+            var imageSize = new L.Point(image.width, image.height);
 
-            var north = center.y
-            var south = center.y + image.height;
-            var west = center.x
-            var east = center.x + image.width;
+            boundedMapSize.x *= options.boundingScale;
+            boundedMapSize.y *= options.boundingScale;
+            var xBoundingPad = (mapSize.x - boundedMapSize.x) / 2;
+            var yBoundingPad = (mapSize.y - boundedMapSize.y) / 2;
+
+            var mapAspectRatio = boundedMapSize.x / boundedMapSize.y;
+            var imageAspectRatio = imageSize.x / imageSize.y;
+
+            var xPad = 0;
+            var yPad = 0;
+            if (mapAspectRatio >= imageAspectRatio) {
+                // Image taller than map per width, so pad x.
+                var imageScale = boundedMapSize.y / imageSize.y;
+                var scaledImageWidth = imageSize.x * imageScale;
+                xPad = (boundedMapSize.x - scaledImageWidth) / 2;
+            } else {
+                // Image wider than map per height, so pad y.
+                var imageScale = boundedMapSize.x / imageSize.x;
+                var scaledImageHeight = imageSize.y * imageScale;
+                yPad = (boundedMapSize.y - scaledImageHeight) / 2;
+            }
+
+            var north = yBoundingPad + yPad;
+            var south = mapSize.y - (yBoundingPad + yPad);
+            var west = xBoundingPad + xPad;
+            var east = mapSize.x -  (xBoundingPad + xPad);
 
             var nw = new L.Point(west, north);
             var ne = new L.Point(east, north);
@@ -115,17 +143,9 @@ define(function(require) {
         function createMarkerAtContainerPoint(container_point) {
             var latlng = containerPointToLatlng(container_point);
 
-            // Use the custom icon, or fall back on the default one if it's
-            // not defined.
-            var icon;
-            if (options.icon) {
-                icon = new options.icon();
-            } else {
-                icon = new L.Icon.Default();
-            }
             return new L.Marker(latlng, {
                 draggable: true,
-                icon: icon,
+                icon: new options.icon(),
             });
         }
 
