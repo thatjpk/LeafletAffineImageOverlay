@@ -1,4 +1,7 @@
-Demo: http://ec2-107-21-232-84.compute-1.amazonaws.com/static/laio/index.html
+*Deprecated*: Check out https://github.com/fedealconada/Leaflet.AffineImage
+@fedealconada greatly improved this by making it an actual leaflet layer,
+which is much better; you should use his instead.  This repository remains
+for posterity.
 
 A super-hacky overlay for leaflet[1] that lets you display an image on top of
 the map, transform it using three anchors, and output ground control points
